@@ -1,0 +1,37 @@
+# Maintainer: Techlive Zheng <techlivezheng at gmail dot com>
+# Contributor: Maxim Chervonny <fiskus@chervonny.ru>
+
+pkgname=dotploy
+pkgdesc="A bash only script to deploy $HOME dot files acrossing different hosts"
+pkgver=0.3.4
+pkgrel=1
+url="https://github.com/techlivezheng/dotploy"
+arch=('any')
+license=('GPL')
+source=(https://github.com/techlivezheng/dotploy/archive/"${pkgname}"-v"${pkgver}".tar.gz)
+depends=('bash')
+makedepends=('git' 'perl')
+
+build() {
+  cd "${srcdir}"/"${pkgname}"-"${pkgname}"-v"${pkgver}"
+
+  make standalone
+
+  sed -i 's/dotploy\.sh/dotploy/g' dotploy
+}
+
+check() {
+  cd "${srcdir}"/"${pkgname}"-"${pkgname}"-v"${pkgver}"
+
+  sed -i 's/dotploy\.sh/dotploy/g' tests/test-dotploy.sh
+
+  make test
+}
+
+package() {
+  cd "${srcdir}"/"${pkgname}"-"${pkgname}"-v"${pkgver}"
+
+  install -D -m 0755 dotploy "${pkgdir}"/usr/bin/dotploy
+}
+
+md5sums=('69a421962e7e6b1575a6aa3b6f9ff064')
